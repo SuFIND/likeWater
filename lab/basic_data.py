@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -- coding: utf-8 --**
-
+import re
 import requests
 from lab.utils.common import getValueWithDefault
 from lab.utils.type_trans import transStr, transNumber, transDatetime
+from lab.const.THS_const import tableHeadMap
 
 # 同花顺i问财股票查询api
 url_01 = 'http://search.10jqka.com.cn/unifiedwap/unified-wap/result/get-stock-pick'
@@ -17,6 +18,17 @@ class TongHuaShunService(object):
             'DOUBLE': transNumber,
             'DATE': transDatetime
         }
+
+    def columnNameParse(self, columnName):
+        reRst = re.match(r'(?P<column>.*)\[(?P<date>.*)\]', columnName)
+        column = columnName
+        if reRst:
+            column = reRst.group('column')
+        column = getValueWithDefault(tableHeadMap, column, '')
+        if reRst:
+            dateStr = reRst.group('date')
+            column += '[{}]'.format(dateStr)
+        return column
 
     def buildStockRequest(self, form: dict, **kwargs):
         headers = {
@@ -41,12 +53,16 @@ class TongHuaShunService(object):
         for itemIdx, item in enumerate(items):
             buff = {}
             for k, v in item.items():
+                newK = self.columnNameParse(k)
+                if newK == '':
+                    continue
                 columnCfg = getValueWithDefault(configurationData, k, {})
                 dataType = getValueWithDefault(columnCfg, 'type', 'STR')
                 newV = self.transMap[dataType](v)
-                buff.update({k: newV})
+                buff.update({newK: newV})
             tgt.append(buff)
         return tgt
+
 
 form = {
     'question': '2013年到2019年ROE≥15%，2020年3月31日ROE≥3.75%，上市时间早于2015年5月25日，行业，2020年3月31日营收增长率，2020年3月31日净利润增长率，2019年营收增长率，2019年净利润增长率，2016年到2019年的营业收入，2016年到2019年的应收账款，2016年到2019年的存货，2017年到2019年的流动比率',
