@@ -96,34 +96,37 @@ class TongHuaShunQuestionBuilder:
     def operatingIncomeBuild(self, method, **kwargs):
         buff = ''
         if method == 'Hukuba':
+            template = '{}年到{}年的营业收入，'
             diffYear = getValueWithDefault(kwargs, 'diffYear', 3)
             if self.tgtTimePoint - datetime.datetime(year=self.year, month=4, day=30) >= datetime.timedelta(days=0):
-                buff += '{}年到{}年的营业收入，'.format(self.year - diffYear - 1, self.year - 1)
+                buff += template.format(self.year - diffYear - 1, self.year - 1)
 
             else:
-                buff += '{}年到{}年的营业收入，'.format(self.year - diffYear - 2, self.year - 2)
+                buff += template.format(self.year - diffYear - 2, self.year - 2)
         return buff
 
     def accountsReceivableBuild(self, method, **kwargs):
         buff = ''
         if method == 'Hukuba':
+            template = '{}年到{}年的应收账款，'
             diffYear = getValueWithDefault(kwargs, 'diffYear', 3)
             if self.tgtTimePoint - datetime.datetime(year=self.year, month=4, day=30) >= datetime.timedelta(days=0):
-                buff += '{}年到{}年的应收账款，'.format(self.year - diffYear - 1, self.year - 1)
+                buff += template.format(self.year - diffYear - 1, self.year - 1)
 
             else:
-                buff += '{}年到{}年的应收账款，'.format(self.year - diffYear - 2, self.year - 2)
+                buff += template.format(self.year - diffYear - 2, self.year - 2)
         return buff
 
     def inventoryBuild(self, method, **kwargs):
         buff = ''
         if method == 'Hukuba':
+            template = '{}年到{}年的存货，'
             diffYear = getValueWithDefault(kwargs, 'diffYear', 3)
             if self.tgtTimePoint - datetime.datetime(year=self.year, month=4, day=30) >= datetime.timedelta(days=0):
-                buff += '{}年到{}年的存货，'.format(self.year - diffYear - 1, self.year - 1)
+                buff += template.format(self.year - diffYear - 1, self.year - 1)
 
             else:
-                buff += '{}年到{}年的存货，'.format(self.year - diffYear - 2, self.year - 2)
+                buff += template.format(self.year - diffYear - 2, self.year - 2)
         return buff
 
     def liquidityRatioBuild(self, method, **kwargs):
