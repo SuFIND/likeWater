@@ -20,11 +20,11 @@ class TongHuaShunQuestionBuilder:
 
                 # build current year ROE ≥ 3.75*Q %
                 if self.tgtTimePoint <= datetime.datetime(year=self.year, month=8, day=30):
-                    buff += '{}年3月31日ROE≥{}，'.format(self.year, round(minROE * 100 / 4, 2))
+                    buff += '{}年3月31日ROE≥{}%，'.format(self.year, round(minROE * 100 / 4, 2))
                 elif self.tgtTimePoint <= datetime.datetime(year=self.year, month=10, day=30):
-                    buff += '{}年6月30日ROE≥{}，'.format(self.year, round(minROE * 100 / 4 * 2, 2))
+                    buff += '{}年6月30日ROE≥{}%，'.format(self.year, round(minROE * 100 / 4 * 2, 2))
                 else:
-                    buff += '{}年9月30日ROE≥{}，'.format(self.year, round(minROE * 100 / 4 * 3, 2))
+                    buff += '{}年9月30日ROE≥{}%，'.format(self.year, round(minROE * 100 / 4 * 3, 2))
             else:
                 # build ROE ≥ 15%
                 buff += '{}年到{}年ROE≥{}%，'.format(self.year - diffYear - 1, self.year - 2, minROE * 100)
@@ -149,10 +149,12 @@ class TongHuaShunQuestionBuilder:
         buff += self.accountsReceivableBuild(method)
         buff += self.inventoryBuild(method)
         buff += self.liquidityRatioBuild(method)
+        if buff[-1] == '，':
+            buff = buff[:-1]
         return buff
 
 
 if __name__ == '__main__':
-    t = TongHuaShunQuestionBuilder(year=2020, month=5, day=25)
+    t = TongHuaShunQuestionBuilder(year=2020, month=3, day=25)
     question = t.buildHukubaStockQuery()
     print(question)
