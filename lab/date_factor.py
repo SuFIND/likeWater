@@ -1,6 +1,7 @@
 from lab.basic_data import TongHuaShunService
 from lab.THS_query_question import TongHuaShunQuestionBuilder
 import lab.filter_logic as fl
+
 global globalState
 globalState = {}
 
@@ -22,16 +23,19 @@ def dataPipeLine(data, pipeLine=None):
         pipeLine = []
     buffData = data
     method = {
-        'filterCycleIndustry': {'func': fl.filterCycleIndustry, 'args': [buffData]},
-        # 'filterBearCondition01': {'func': None, 'args': None},
+        'filterCycleIndustry': {'func': fl.filterCycleIndustry, 'exArgs': []},
+        'filterFundamentals': {'func': fl.filterFundamentals, 'exArgs': []},
+        'filterBearCondition01': {'func': fl.filterBearCondition01, 'exArgs': []},
         # 'filterBearCondition02': {'func': None, 'args': None},
         # 'filterBearCondition03': {'func': None, 'args': None},
     }
     for one in pipeLine:
         if one in method:
             func = method[one]['func']
-            args = method[one]['args']
+            exArgs = method[one]['exArgs']
+            args = [buffData] + exArgs
             buffData = func(*args)
+    return buffData
 
 
 if __name__ == '__main__':
@@ -39,4 +43,5 @@ if __name__ == '__main__':
     initDataSource(THS_url)
     THSService = globalState['THSService']
     data = getSource(THSService, 2020, 5, 28)
-    dataPipeLine(data, pipeLine=['filterCycleIndustry'])
+    rst = dataPipeLine(data, pipeLine=['filterCycleIndustry', 'filterFundamentals', 'filterBearCondition01'])
+    print(1)

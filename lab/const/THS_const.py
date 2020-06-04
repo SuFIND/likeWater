@@ -10,7 +10,9 @@ tableHeadMap = {
     '营业收入': 'operating_income',
     '应收票据及应收账款': 'accounts_receivable',
     '存货': 'inventory',
-    '流动比率': 'capital_flow_ratio'
+    '流动比率': 'capital_flow_ratio',
+    '营业收入(同比增长率)': 'operating_income(YoY GR)',
+    '归属母公司股东的净利润(同比增长率)': 'net_profit_attributable_to_shareholders_of_parent_company(YoY GR)',
 }
 
 cycleIndustry = {'采掘-采掘服务-其他采掘服务', '采掘-采掘服务-油气钻采服务', '黑色金属-钢铁-普钢', '黑色金属-钢铁-特钢',
