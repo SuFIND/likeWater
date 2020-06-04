@@ -26,8 +26,8 @@ def dataPipeLine(data, pipeLine=None):
         'filterCycleIndustry': {'func': fl.filterCycleIndustry, 'exArgs': []},
         'filterFundamentals': {'func': fl.filterFundamentals, 'exArgs': []},
         'filterBearCondition01': {'func': fl.filterBearCondition01, 'exArgs': []},
-        # 'filterBearCondition02': {'func': None, 'args': None},
-        # 'filterBearCondition03': {'func': None, 'args': None},
+        'filterBearCondition02': {'func': fl.filterBearCondition02, 'exArgs': []},
+        'filterBearCondition03': {'func': fl.filterBearCondition03, 'exArgs': []},
     }
     for one in pipeLine:
         if one in method:
@@ -43,5 +43,6 @@ if __name__ == '__main__':
     initDataSource(THS_url)
     THSService = globalState['THSService']
     data = getSource(THSService, 2020, 5, 28)
-    rst = dataPipeLine(data, pipeLine=['filterCycleIndustry', 'filterFundamentals', 'filterBearCondition01'])
-    print(1)
+    rst = dataPipeLine(data, pipeLine=['filterCycleIndustry', 'filterFundamentals', 'filterBearCondition01',
+                                       'filterBearCondition02', 'filterBearCondition03'])
+    print(rst)

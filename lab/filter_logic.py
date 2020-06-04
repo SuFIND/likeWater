@@ -80,6 +80,84 @@ def filterBearCondition01(data):
     return newData
 
 
+def filterBearCondition02(data):
+    newData = []
+    for dataOne in data:
+        cache = {
+            'operating_income': [],
+            'inventory': []
+        }
+        for k, v in dataOne.items():
+            reRst = re.match('(?P<name>.*)\[(?P<time>.*)\]', k)
+            if reRst:
+                buff = reRst.groupdict()
+                buff['val'] = v
+                if buff.get('name') not in cache:
+                    continue
+                cache[buff['name']].append(buff)
+        operatingIncome = cache['operating_income']
+        inventory = cache['inventory']
+        operatingIncome.sort(key=lambda x: x['time'], reverse=True)
+        operatingIncome = [one['val'] for one in operatingIncome]
+        inventory.sort(key=lambda x: x['time'], reverse=True)
+        inventory = [one['val'] for one in inventory]
+
+        # 营业收入增长额 和 存货增长额
+        operatingIncomeBuff = diffSub(operatingIncome)
+        inventoryBuff = diffSub(inventory)
+
+        prevRst = None
+        isBad = False
+        for idx, one in enumerate(operatingIncomeBuff):
+            a = inventoryBuff[idx]
+            b = operatingIncomeBuff[idx]
+            currRst = a - b
+            if prevRst is None:
+                prevRst = currRst
+                continue
+            if prevRst > 0 and currRst > 0:
+                isBad = True
+                break
+
+        if not isBad:
+            newData.append(dataOne)
+    return newData
+
+
+def filterBearCondition03(data):
+    newData = []
+    for dataOne in data:
+        cache = {
+            'capital_flow_ratio': [],
+        }
+        for k, v in dataOne.items():
+            reRst = re.match('capital_flow_ratio\[(?P<time>.*)\]', k)
+            if reRst:
+                buff = reRst.groupdict()
+                buff['val'] = v
+                if buff.get('name') not in cache:
+                    continue
+                cache[buff['name']].append(buff)
+        capitalFlowRatio = cache['capital_flow_ratio']
+        capitalFlowRatio.sort(key=lambda x: x['time'], reverse=True)
+        capitalFlowRatio = [one['val'] for one in capitalFlowRatio]
+
+        prevRst = None
+        isBad = False
+        for idx, one in enumerate(capitalFlowRatio):
+            curr = capitalFlowRatio[idx]
+            if prevRst is None:
+                prevRst = curr
+                continue
+            if prevRst > 0 and curr > 0:
+                isBad = True
+                break
+
+        if not isBad:
+            newData.append(dataOne)
+    return newData
+
+
 def diffSub(tgt: list):
     rst = []
     tgtMaxIdx = len(tgt) - 1
